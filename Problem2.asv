@@ -100,7 +100,6 @@ t = 1.03; %threshold
 d = .9; %decrease
 D = 1.02; %increase
 err = zeros(1,N);
-oldW = 0;
 tic;
 while (iterations < maxIterations)
     iterations = iterations + 1;
@@ -109,19 +108,19 @@ while (iterations < maxIterations)
         out(i) = sum(w.*[x(i,:),1]);
         deltaW = eta*(y(i) - out(i))*[x(i,:),1];
         w = w + deltaW;
+        oldError = err(i);
         err(i) = (y(i) - out(i))^2;
-    end
-    
-    E(iterations) = sum(err)/N;
-    if(iterations > 1)
-        if((E(iterations)-E(iterations-1)) > t)
-            %Discard weights and bias
-            eta = eta * d;
-            w = oldW;
-        else
-            eta = eta * D;
+        if(iterations > 1)
+            if(abs(err(i)-oldError) > t)
+                %Discard weights and bias
+                eta = eta * d;
+                w = oldW;
+            elseif()
+                eta = eta * D;
+            end
         end
     end
+    E(iterations) = sum(err)/N;
 end
 toc
 min(E)
