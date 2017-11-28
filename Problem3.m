@@ -8,17 +8,9 @@ clear all; close all;
 % Create some random data around x1 + 2*x2 - 2 and classify it as > 0 is 1
 % and <=0 is 0
 N = 100;
-x1 = rand(N,1) + .5;
-x2 = rand(N,1);
-x = [x1,x2];
-y = zeros(N,1);
-count = 0;
-for i=1:N
-    if ((x1(i) + 2*x2(i) - 2) > 0)
-        y(i) = 1;
-        count = count + 1;
-    end
-end
+data = gen_sigmoid_classes(N);
+x = [data(:,1),data(:,2)];
+y = data(:,3);
 
 % initialize the weight vector
 w = rand(1,2+1);
@@ -31,7 +23,7 @@ tic;
 while (iterations < maxIterations)
     iterations = iterations + 1;
     for i=1:N
-        out(i) = sum(w.*[x(i,:),1]);
+        out(i) = w(3) + w(2).*(x(i,2) + x(i,2).^2) + w(1).*(x(i,1) + x(i,1).^2);
         deltaW = eta*(y(i) - out(i))*[x(i,:),1];
         w = w + deltaW;
         err(i) = (y(i) - out(i))^2;
@@ -47,23 +39,23 @@ ylabel('Error');
 xlabel('Iteration');
 
 % Incremental Fashion
-maxIterations = 100;
-iterations = 0;
-numUpdates = 0;
-eta = .01; % this is the learning rate
-tic;
-for i=1:N
-    out(i) = sum(w.*[x(i,:),1]);
-    deltaW = eta*(y(i) - out(i))*[x(i,:),1];
-    w = w + deltaW;
-    err(i) = (y(i) - out(i))^2;
-    E(i) = sum(err)/i;
-end
-toc
-min(E)
-return
-% Plot the Error per iteration
-plot(linspace(1,maxIterations,maxIterations),E);
-title('Error per Iteration');
-ylabel('Error');
-xlabel('Iteration');
+% maxIterations = 100;
+% iterations = 0;
+% numUpdates = 0;
+% eta = .01; % this is the learning rate
+% tic;
+% for i=1:N
+%     out(i) = sum(w.*[x(i,:),1]);
+%     deltaW = eta*(y(i) - out(i))*[x(i,:),1];
+%     w = w + deltaW;
+%     err(i) = (y(i) - out(i))^2;
+%     E(i) = sum(err)/i;
+% end
+% toc
+% min(E)
+% return
+% % Plot the Error per iteration
+% plot(linspace(1,maxIterations,maxIterations),E);
+% title('Error per Iteration');
+% ylabel('Error');
+% xlabel('Iteration');

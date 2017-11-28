@@ -61,7 +61,7 @@ for i=1:N
 end
 toc
 min(E)
-return
+
 % Plot the Error per iteration
 plot(linspace(1,maxIterations,maxIterations),E);
 title('Error per Iteration');
